@@ -3,31 +3,30 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Документация по Нейросетям v2.0</title>
+    <title>Документация по нейросетям - Edge Bending</title>
     <style>
-        /* --- Глобальные переменные и Сброс стилей --- */
+        /* --- Общие стили, переменные и сброс --- */
         :root {
-            --primary-color: #007bff; /* Яркий синий */
-            --secondary-color: #ffc107; /* Яркий желтый/оранжевый */
-            --accent-glow: rgba(0, 123, 255, 0.4); /* Синее свечение */
-            --background-color: #f0f2f5; /* Очень светлый серый фон */
-            --card-bg: #ffffff; /* Чистый белый */
-            --text-color: #212529; /* Почти черный текст */
-            --text-muted: #6c757d; /* Приглушенный серый текст */
-            --header-bg: rgba(33, 37, 41, 0.85); /* Полупрозрачный темный для хедера */
-            --header-text: #ffffff;
-            --footer-bg: #212529; /* Темный футер */
-            --footer-text: #adb5bd;
-            --code-bg: #e9ecef;
+            --primary-color: #6a11cb;
+            --secondary-color: #2575fc;
+            --gradient-main: linear-gradient(135deg, var(--primary-color) 0%, var(--secondary-color) 100%);
+            --background-color: #f0f2f5;
+            --card-bg-color: #ffffff;
+            --text-color: #333;
+            --header-bg: rgba(255, 255, 255, 0.85);
+            --header-text: #333;
+            --header-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+            --footer-bg: #2c3e50;
+            --footer-text: #bdc3c7;
+            --code-bg: #e8eaed;
             --border-color: #dee2e6;
-            --shadow-light: rgba(0, 0, 0, 0.08);
-            --shadow-medium: rgba(0, 0, 0, 0.12);
-            --shadow-strong: rgba(0, 0, 0, 0.18);
-            --gradient-primary: linear-gradient(135deg, #007bff, #0056b3);
-            --gradient-secondary: linear-gradient(135deg, #ffc107, #e0a800);
-             --border-radius-sm: 5px;
-             --border-radius-md: 10px;
-             --border-radius-lg: 15px;
+            --glow-color-primary: rgba(106, 17, 203, 0.5);
+            --glow-color-secondary: rgba(37, 117, 252, 0.5);
+
+            /* Edge Bending Параметры */
+            --edge-bend-zone: 150px; /* Шеттен активация қашықтығы (px) */
+            --edge-bend-scale: 0.92; /* Шеттегі минималды масштаб (Y осі бойынша) */
+            --edge-bend-opacity: 0.7; /* Шеттегі минималды мөлдірлік */
         }
 
         * {
@@ -38,711 +37,500 @@
 
         html {
             scroll-behavior: smooth;
+            font-size: 16px;
         }
 
         body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
             line-height: 1.7;
             color: var(--text-color);
             background-color: var(--background-color);
-            display: flex;
-            flex-direction: column;
-            min-height: 100vh;
-            /* Небольшой фоновый градиент для тела */
-            background-image: linear-gradient(to top, #f0f2f5 0%, #e9ecef 100%);
+            /* Убираем perspective, он больше не нужен для этого эффекта */
+            overflow-x: hidden;
+            background: var(--background-color) url('data:image/svg+xml,%3Csvg width="60" height="60" viewBox="0 0 60 60" xmlns="http://www.w3.org/2000/svg"%3E%3Cg fill="none" fill-rule="evenodd"%3E%3Cg fill="%23dce1e6" fill-opacity="0.4"%3E%3Cpath d="M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z"/%3E%3C/g%3E%3C/g%3E%3C/svg%3E');
+        }
+
+        @supports (font-variation-settings: normal) {
+          body { font-family: 'Inter var', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif; }
         }
 
         .container {
-            max-width: 1140px;
+            max-width: 1100px;
             margin: 0 auto;
-            padding: 0 20px;
+            padding: 0 25px;
+            width: 100%;
         }
 
-        h1, h2, h3, h4 {
-            margin-bottom: 0.7em;
-            font-weight: 600;
+        /* --- Обертка контента (теперь без 3D стилей) --- */
+        #content-wrapper {
+            width: 100%;
+            /* transform-style, perspective, transform: rotateX - удалены */
+            background-color: transparent;
         }
-        h1 { font-size: 2.8rem; color: var(--header-text); text-shadow: 1px 1px 2px rgba(0,0,0,0.2); }
-        h2 {
-            font-size: 2.2rem;
-            margin-top: 2.5em;
-            padding-bottom: 0.4em;
-            border-bottom: 3px solid;
-            border-image: var(--gradient-primary) 1; /* Градиентная линия */
-            color: #1e2a38; /* Темно-синий для заголовков */
-        }
-        h3 { font-size: 1.6rem; color: var(--primary-color); margin-bottom: 0.5em; }
-        h4 { font-size: 1.25rem; font-weight: 600; color: #343a40; }
-
-        p { margin-bottom: 1.2em; }
-        a { color: var(--primary-color); text-decoration: none; transition: all 0.3s ease; }
-        a:hover { color: #0056b3; text-decoration: underline; }
-
-        img { max-width: 100%; height: auto; }
 
         /* --- Шапка (Header) --- */
-        #site-header {
+        header {
             background-color: var(--header-bg);
-            backdrop-filter: blur(10px); /* Эффект размытого стекла */
-            -webkit-backdrop-filter: blur(10px); /* Для Safari */
-            padding: 1rem 0;
+            color: var(--header-text);
+            padding: 0.8rem 0;
             position: sticky;
             top: 0;
             z-index: 1000;
-            box-shadow: 0 4px 15px var(--shadow-light);
-            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            box-shadow: var(--header-shadow);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+            /* transform: translateZ(0); - больше не нужен */
         }
 
-        #site-header .container {
+        header .container {
             display: flex;
             justify-content: space-between;
             align-items: center;
             flex-wrap: wrap;
         }
 
-        #site-header h1 {
-            margin-bottom: 0;
-            font-size: 1.9rem;
+        header h1 {
+            font-size: 1.6rem;
             font-weight: 700;
-            letter-spacing: -0.5px;
-        }
-
-        #site-header nav ul {
-            list-style: none;
-            display: flex;
-            flex-wrap: wrap;
-            gap: 5px;
-        }
-
-        #site-header nav a {
-            color: var(--header-text);
-            padding: 0.6rem 1rem;
-            border-radius: var(--border-radius-sm);
-            transition: background-color 0.3s ease, color 0.3s ease, transform 0.2s ease, box-shadow 0.3s ease;
-            font-weight: 500;
-            display: inline-block; /* Для transform */
-        }
-
-        #site-header nav a:hover {
-            background-color: var(--primary-color);
-            color: var(--header-text);
-            text-decoration: none;
-            transform: translateY(-2px); /* Небольшой подъем */
-            box-shadow: 0 4px 10px var(--accent-glow); /* Подсветка при наведении */
-        }
-
-        /* --- Главный экран --- */
-        #main-screen {
-            padding: 5rem 0;
+            background: var(--gradient-main);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+            margin-bottom: 0.5rem;
+            flex-basis: 100%;
             text-align: center;
-            /* Более сложный градиент */
-            background: linear-gradient(140deg, #005bea 0%, #00c6fb 100%);
-            color: var(--header-text);
-            position: relative;
-            overflow: hidden; /* Чтобы псевдоэлементы не вылезали */
-        }
-        /* Добавим декоративные элементы */
-        #main-screen::before, #main-screen::after {
-             content: '';
-             position: absolute;
-             border-radius: 50%;
-             opacity: 0.1;
-             filter: blur(30px);
-        }
-        #main-screen::before {
-             width: 300px; height: 300px;
-             background: var(--secondary-color);
-             top: -100px; left: -100px;
-        }
-        #main-screen::after {
-             width: 400px; height: 400px;
-             background: var(--primary-color);
-             bottom: -150px; right: -150px;
         }
 
-        #main-screen .container {
-             position: relative; /* Чтобы текст был над псевдоэлементами */
-             z-index: 1;
+        header nav ul { list-style: none; display: flex; flex-wrap: wrap; justify-content: center; flex-basis: 100%; }
+        header nav ul li { margin: 0 5px; }
+        header nav ul li a { color: var(--header-text); text-decoration: none; padding: 8px 15px; border-radius: 20px; transition: background-color 0.3s ease, color 0.3s ease, box-shadow 0.3s ease; font-weight: 500; font-size: 0.95rem; }
+        header nav ul li a:hover { background-color: rgba(106, 17, 203, 0.1); color: var(--primary-color); box-shadow: 0 2px 10px rgba(106, 17, 203, 0.1); }
+        header nav ul li a.active { background: var(--gradient-main); color: white; box-shadow: 0 4px 15px var(--glow-color-primary); }
+
+        @media (min-width: 768px) {
+            header h1 { flex-basis: auto; margin-bottom: 0; text-align: left; font-size: 1.8rem; }
+            header nav ul { flex-basis: auto; }
+            header nav ul li { margin: 0 10px; }
         }
 
-        #main-screen h2 {
-             color: var(--header-text);
-             border-bottom: none;
-             font-size: 3rem;
-             font-weight: 700;
-             margin-bottom: 0.5em;
-             text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.2);
+        /* --- Основной контент --- */
+        main {
+            padding-top: 1rem;
         }
-        #main-screen p {
-            font-size: 1.15rem;
-            max-width: 750px;
-            margin: 1em auto;
-            line-height: 1.8;
-            color: rgba(255, 255, 255, 0.9);
-        }
-         #main-screen strong {
-            color: var(--secondary-color);
-            font-weight: 600;
-         }
 
-        /* --- Секции --- */
         section {
-            padding: 4rem 0;
-            position: relative; /* Для возможных будущих декораций */
-        }
-        section:nth-of-type(odd) { /* Чередование фона секций */
-            background-color: var(--card-bg); /* Белый фон для нечетных секций */
-        }
-
-
-        /* --- Популярные нейросети (Карточки 3D) --- */
-        .network-cards {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-            gap: 30px;
-            margin-top: 2.5rem;
-            perspective: 1500px; /* Глубина 3D пространства для сетки */
-        }
-
-        .network-card {
-            background-color: var(--card-bg);
-            border-radius: var(--border-radius-lg); /* Более скругленные углы */
-            padding: 30px;
-            box-shadow: 0 8px 25px var(--shadow-medium);
-            transition: transform 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275), box-shadow 0.5s ease; /* Плавная трансформация с "отскоком" */
-            transform-style: preserve-3d;
-            border: 1px solid var(--border-color);
+            padding: 50px 0;
+            margin-bottom: 30px;
+            /* transform: translateZ(0); - больше не нужен */
             position: relative;
-            overflow: hidden; /* Скрыть выходящее свечение */
+            /* Добавляем transition для плавного "изгиба" */
+            transition: transform 0.3s ease-out, opacity 0.3s ease-out;
+             /* Важно для правильного масштабирования от центра секции */
+             transform-origin: center center;
         }
-        /* Свечение внутри карточки */
-        .network-card::before {
-            content: "";
-            position: absolute;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            background: radial-gradient(circle at var(--x, 50%) var(--y, 50%), var(--accent-glow), transparent 70%);
-            opacity: 0;
-            transition: opacity 0.5s ease;
-            z-index: 0;
-            pointer-events: none; /* Чтобы не мешало кликам/тексту */
-             border-radius: inherit;
+
+        /* Применяем стили по умолчанию, которые будет менять JS */
+        section {
+             transform: scaleY(1);
+             opacity: 1;
         }
 
 
-        .network-card:hover {
-            transform: rotateY(8deg) rotateX(3deg) translateZ(30px) scale(1.03); /* 3D поворот и приближение */
-            box-shadow: 0 15px 40px var(--shadow-strong);
-            z-index: 10; /* Поднимаем карточку над остальными при наведении */
+        h2 {
+            text-align: center; margin-bottom: 40px; font-size: 2.2rem; font-weight: 700; position: relative; display: inline-block; left: 50%; transform: translateX(-50%); color: #2c3e50;
         }
-        .network-card:hover::before {
-            opacity: 1; /* Показать свечение при наведении */
-        }
-        /* Обновление позиции свечения (требует JS, но можно имитировать в центре) */
-         /* Без JS сложно сделать следование за мышью, оставляем статичное свечение */
+        h2::after { content: ''; position: absolute; width: 60%; height: 4px; background: var(--gradient-main); bottom: -10px; left: 20%; border-radius: 2px; }
 
-        .network-card h3 {
-            margin-top: 0;
-            position: relative; /* Чтобы текст был над свечением */
-            z-index: 1;
-        }
-        .network-card p, .network-card ul, .network-card strong {
-            position: relative;
-             z-index: 1;
-        }
 
-        .network-card ul {
-            list-style: none; /* Убираем стандартные маркеры */
-            margin-left: 0;
-            margin-top: 1em;
-            padding-left: 1.2em; /* Отступ для кастомных маркеров */
+        /* --- Главный экран (#home) --- */
+        #home {
+            /* Стили секции #home остаются почти без изменений */
+             text-align: center; padding: 80px 20px; margin-top: 0; border-radius: 15px; background: var(--card-bg-color); box-shadow: 0 10px 40px rgba(0, 0, 0, 0.08); position: relative; overflow: hidden;
+             /* Transition уже есть у родительской секции, но можно добавить для специфичных анимаций #home */
         }
-         .network-card ul li {
-            margin-bottom: 0.5em;
-            font-size: 0.95rem;
-            color: var(--text-muted);
-            position: relative;
+        #home::before { content: ''; position: absolute; top: -50%; left: -50%; width: 200%; height: 200%; background: radial-gradient(circle, rgba(106, 17, 203, 0.1) 0%, rgba(37, 117, 252, 0.05) 30%, rgba(255,255,255,0) 70%); z-index: 0; animation: rotateBackground 20s linear infinite; }
+        #home .container { position: relative; z-index: 1; }
+
+        @keyframes rotateBackground { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
+
+        #home h2 { font-size: 2.8rem; background: var(--gradient-main); -webkit-background-clip: text; background-clip: text; color: transparent; margin-bottom: 20px; }
+        #home h2::after { display: none; }
+        #home p { font-size: 1.15rem; max-width: 750px; margin: 0 auto; color: #555; }
+
+
+        /* --- Популярные нейросети (#popular-nns) --- */
+        /* Стили карточек остаются без изменений, так как эффект применяется к секции */
+        .card-container { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 30px; /* perspective убран */ }
+        .card { background-color: var(--card-bg-color); border-radius: 15px; padding: 30px; box-shadow: 0 5px 20px rgba(0, 0, 0, 0.07); transition: transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275), box-shadow 0.4s ease; /* transform-style убран */ border: 1px solid var(--border-color); }
+        .card:hover { transform: translateY(-10px) /* rotateX убран */ scale(1.03); box-shadow: 0 15px 35px rgba(0, 0, 0, 0.12), 0 0 25px var(--glow-color-primary); }
+        .card h3 { background: var(--gradient-main); -webkit-background-clip: text; background-clip: text; color: transparent; margin-bottom: 15px; font-size: 1.5rem; font-weight: 600; }
+        .card p { margin-bottom: 20px; font-size: 1rem; color: #444; }
+        .card strong { display: block; margin-bottom: 8px; color: var(--primary-color); font-weight: 600; }
+        .card ul { list-style: none; padding-left: 0; font-size: 0.9rem; color: #555; }
+        .card ul li { margin-bottom: 8px; padding-left: 20px; position: relative; }
+        .card ul li::before { content: '→'; position: absolute; left: 0; color: var(--secondary-color); font-weight: bold; }
+
+
+        /* --- Примеры промтов (#prompt-examples) --- */
+        /* Стили таблицы и ее элементов остаются без изменений */
+         #prompt-examples { background-color: var(--card-bg-color); padding-top: 50px; padding-bottom: 50px; border-radius: 15px; box-shadow: 0 8px 30px rgba(0, 0, 0, 0.08); }
+        .prompt-table { width: 100%; border-collapse: separate; border-spacing: 0 10px; margin-top: 20px; background-color: transparent; box-shadow: none; border-radius: 0; overflow: visible; }
+        .prompt-table th { background-color: transparent; color: var(--primary-color); font-weight: 600; text-align: left; padding: 12px 15px; border: none; font-size: 1.1rem; }
+        .prompt-table td { border: none; border-bottom: 1px dashed var(--border-color); padding: 15px; text-align: left; background-color: #fff; transition: transform 0.3s ease, box-shadow 0.3s ease; }
+        .prompt-table td:first-child { border-radius: 10px 0 0 10px; font-weight: 500; }
+        .prompt-table td:last-child { border-radius: 0 10px 10px 0; }
+        .prompt-table tbody tr { box-shadow: 0 3px 10px rgba(0,0,0,0.04); border-radius: 10px; overflow: hidden; }
+        .prompt-table tbody tr:hover td { transform: translateY(-3px); border-color: var(--secondary-color); }
+        .prompt-table tbody tr:hover { box-shadow: 0 6px 20px rgba(0,0,0,0.08), 0 0 15px var(--glow-color-secondary); }
+        .prompt-code { position: relative; display: flex; align-items: center; justify-content: space-between; gap: 15px; }
+        .prompt-code pre { background-color: var(--code-bg); padding: 10px 15px; margin: 0; border-radius: 8px; white-space: pre-wrap; word-wrap: break-word; flex-grow: 1; overflow-x: auto; font-size: 0.9em; border: 1px solid #dcdcdc; }
+        .copy-button { background: var(--gradient-main); color: white; border: none; padding: 10px 18px; border-radius: 25px; cursor: pointer; font-size: 0.9rem; font-weight: 500; transition: background-color 0.3s ease, transform 0.2s ease, box-shadow 0.3s ease; white-space: nowrap; flex-shrink: 0; box-shadow: 0 2px 5px rgba(0,0,0,0.1); }
+        .copy-button:hover { background: linear-gradient(135deg, var(--secondary-color) 0%, var(--primary-color) 100%); transform: translateY(-2px) scale(1.05); box-shadow: 0 5px 15px var(--glow-color-primary); }
+        .copy-button:active { transform: translateY(0) scale(1); box-shadow: 0 2px 5px rgba(0,0,0,0.1); }
+        .copy-button.copied { background: #28a745; box-shadow: 0 5px 15px rgba(40, 167, 69, 0.5); }
+        pre code { display: block; font-family: "Fira Code", "Courier New", Courier, monospace; color: #333; }
+        .code-keyword { color: var(--primary-color); font-weight: bold; }
+        .code-string { color: #0b8f4a; }
+        .code-comment { color: #aaa; font-style: italic; }
+        .code-placeholder { color: #e74c3c; font-weight: bold; background-color: rgba(231, 76, 60, 0.1); padding: 1px 3px; border-radius: 3px;}
+
+
+        /* --- FAQ (#faq) --- */
+        /* Стили FAQ остаются без изменений */
+        .faq-container { max-width: 850px; margin: 0 auto; }
+        .faq-item { background-color: var(--card-bg-color); margin-bottom: 15px; border-radius: 10px; box-shadow: 0 4px 15px rgba(0,0,0,0.06); overflow: hidden; border: 1px solid transparent; transition: box-shadow 0.3s ease, border-color 0.3s ease, transform 0.3s ease; }
+        .faq-item:hover { transform: translateY(-5px); box-shadow: 0 8px 25px rgba(0,0,0,0.1), 0 0 20px var(--glow-color-secondary); border-color: var(--secondary-color); }
+        .accordion-toggle { background-color: transparent; border: none; width: 100%; text-align: left; padding: 18px 25px; font-size: 1.15rem; font-weight: 600; cursor: pointer; outline: none; color: var(--text-color); display: flex; justify-content: space-between; align-items: center; transition: background-color 0.3s ease; }
+        .accordion-toggle:hover { color: var(--primary-color); }
+        .accordion-toggle::after { content: '+'; font-size: 1.8rem; font-weight: 300; color: var(--secondary-color); transition: transform 0.4s cubic-bezier(0.68, -0.55, 0.27, 1.55); }
+        .accordion-toggle.active::after { transform: rotate(45deg); }
+        .accordion-content { max-height: 0; overflow: hidden; transition: max-height 0.5s ease-out, padding 0.5s ease-out; background-color: #fafafa; border-top: 1px solid var(--border-color); }
+        .accordion-content p { padding: 20px 25px 25px 25px; font-size: 1rem; color: #555; line-height: 1.8; }
+        .accordion-content ul { padding: 0 25px 25px 45px; font-size: 1rem; color: #555; }
+        .accordion-content li { margin-bottom: 10px; }
+        .accordion-content.active { max-height: 600px; padding-top: 0; }
+
+
+        /* --- Подвал (Footer) --- */
+        footer {
+            background-color: var(--footer-bg); color: var(--footer-text); text-align: center; padding: 30px 0; margin-top: 50px;
+            /* transform: translateZ(0); - больше не нужен */
+             border-top: 5px solid; border-image-slice: 1; border-image-source: var(--gradient-main);
+        }
+        footer p { margin-bottom: 10px; font-size: 0.95rem; }
+        footer a { color: #fff; text-decoration: none; font-weight: 500; transition: color 0.3s ease, text-shadow 0.3s ease; border-bottom: 1px dashed var(--secondary-color); padding-bottom: 2px; }
+        footer a:hover { color: var(--secondary-color); text-shadow: 0 0 10px var(--glow-color-secondary); border-bottom-style: solid; }
+
+         /* --- Адаптивность (без изменений) --- */
+         /* Медиа-запросы остаются теми же */
+         @media (max-width: 768px) {
+            html { font-size: 15px; }
+            .container { padding: 0 20px; }
+            h2 { font-size: 1.9rem; }
+            .card-container { grid-template-columns: 1fr; gap: 25px; }
+            .prompt-table { border-spacing: 0 8px; }
+            .prompt-table th, .prompt-table td { padding: 12px 10px; }
+            .copy-button { padding: 8px 15px; }
+            .prompt-code { flex-direction: column; align-items: stretch; }
+            .copy-button { margin-top: 10px; align-self: flex-end; }
+            #home { padding: 60px 15px; }
+            #home h2 { font-size: 2.4rem; }
+            .faq-item:hover { transform: none; box-shadow: 0 4px 15px rgba(0,0,0,0.06); border-color: transparent; }
+            .faq-item:hover .accordion-toggle { color: var(--primary-color); }
+        }
+         @media (max-width: 480px) {
+             html { font-size: 14px; }
+             body { background-image: none; }
+             header h1 { font-size: 1.5rem; }
+             header nav ul li a { padding: 6px 10px; font-size: 0.9rem; }
+             h2 { font-size: 1.7rem; }
+             h2::after { width: 50%; left: 25%; height: 3px; bottom: -8px; }
+             section { padding: 40px 0; margin-bottom: 20px; }
+             #home { padding: 50px 10px; }
+             #home h2 { font-size: 2rem; }
+             #home p { font-size: 1rem; }
+             .card { padding: 20px; }
+             .card h3 { font-size: 1.3rem; }
+             .accordion-toggle { font-size: 1.05rem; padding: 15px 20px; }
+             .accordion-toggle::after { font-size: 1.6rem; }
+             .accordion-content p, .accordion-content ul { padding-left: 20px; padding-right: 20px; }
+             .prompt-table th { font-size: 1rem; }
+             .prompt-table td { font-size: 0.9rem; }
+             .copy-button { padding: 8px 12px; font-size: 0.85rem; }
+             /* Отключаем Edge Bending на очень маленьких экранах, если он мешает */
+             /* section { transform: none !important; opacity: 1 !important; } */
          }
-        /* Кастомный маркер списка */
-         .network-card ul li::before {
-            content: '>';
-            position: absolute;
-            left: -1.2em;
-            top: 1px;
-            color: var(--primary-color);
-            font-weight: bold;
-         }
-         .network-card strong {
-            display: block;
-            margin-top: 1.2em;
-            color: var(--text-color);
-            font-weight: 600;
-         }
-
-        /* --- Примеры промтов --- */
-        .prompt-list {
-            margin-top: 2.5rem;
-            display: grid; /* Используем грид для лучшего выравнивания */
-            gap: 25px;
-        }
-
-        .prompt-item {
-            background-color: var(--card-bg);
-            border: 1px solid var(--border-color);
-            border-radius: var(--border-radius-md);
-            padding: 25px;
-            box-shadow: 0 5px 15px var(--shadow-light);
-            transition: box-shadow 0.3s ease, transform 0.3s ease;
-            position: relative;
-            overflow: hidden;
-        }
-        .prompt-item:hover {
-             box-shadow: 0 8px 20px var(--shadow-medium);
-             transform: translateY(-3px);
-        }
-        /* Декоративная полоска сверху */
-        .prompt-item::after {
-            content: '';
-            position: absolute;
-            top: 0; left: 0;
-            height: 5px; /* Толщина полоски */
-            width: 100%;
-            background: var(--gradient-secondary); /* Используем вторичный градиент */
-             border-radius: var(--border-radius-md) var(--border-radius-md) 0 0; /* Скругляем только верхние углы */
-        }
-
-        .prompt-item h4 {
-             margin-bottom: 0.8em;
-             padding-top: 0.5em; /* Небольшой отступ от верхней полоски */
-        }
-
-        pre {
-            background-color: #282c34; /* Темный фон для кода */
-            border: none;
-            border-radius: var(--border-radius-sm);
-            padding: 20px;
-            overflow-x: auto;
-            font-family: 'Fira Code', Consolas, Monaco, 'Andale Mono', 'Ubuntu Mono', monospace; /* Моноширинный шрифт */
-            font-size: 0.9em;
-            margin-top: 15px;
-            position: relative;
-            color: #abb2bf; /* Светлый текст для темного фона */
-            box-shadow: inset 0 2px 5px rgba(0,0,0,0.2);
-            white-space: pre-wrap; /* Перенос длинных строк */
-            word-wrap: break-word;
-        }
-
-        code {
-            font-family: inherit;
-            background: none; /* Убираем фон у inline code внутри pre */
-            color: inherit; /* Наследуем цвет от pre */
-             padding: 0;
-        }
-        /* Обновленная подсветка (примеры) */
-        .code-keyword { color: #c678dd; } /* Фиолетовый для ключевых слов */
-        .code-placeholder { color: #e5c07b; font-style: normal;} /* Желтый для плейсхолдеров */
-        .code-string { color: #98c379; } /* Зеленый для строк */
-        .code-comment { color: #5c6370; font-style: italic; } /* Серый для комментариев */
-        .code-function { color: #61afef; } /* Синий для функций */
-        .code-number { color: #d19a66; } /* Оранжевый для чисел */
-
-        .prompt-item small {
-            display: block;
-            margin-top: 10px;
-            font-size: 0.85em;
-            color: var(--text-muted);
-        }
-         .prompt-item small code { /* Стилизуем код внутри small */
-             background-color: var(--code-bg);
-             color: var(--text-color);
-             padding: 2px 5px;
-             border-radius: 3px;
-             font-size: 0.95em;
-         }
-
-        /* --- FAQ (Аккордеон) --- */
-        .faq-accordion {
-            margin-top: 2.5rem;
-            border: 1px solid var(--border-color);
-            border-radius: var(--border-radius-lg);
-            overflow: hidden;
-            background-color: var(--card-bg);
-            box-shadow: 0 8px 20px var(--shadow-light);
-        }
-
-        .faq-item {
-            border-bottom: 1px solid var(--border-color);
-        }
-        .faq-item:last-child { border-bottom: none; }
-
-        .faq-item input[type="checkbox"] { display: none; }
-
-        .faq-item label {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding: 18px 25px;
-            cursor: pointer;
-            background-color: var(--card-bg);
-            font-weight: 600;
-            font-size: 1.1rem;
-            transition: background-color 0.3s ease;
-            position: relative;
-            color: #343a40;
-        }
-
-        .faq-item label:hover { background-color: #f8f9fa; }
-
-        /* Улучшенная иконка "+"/"-" */
-        .faq-item label::after {
-            content: '+';
-            font-size: 1.8rem;
-            color: var(--primary-color);
-            transition: transform 0.4s cubic-bezier(0.68, -0.55, 0.27, 1.55); /* Эффект с отскоком */
-            font-weight: bold;
-            line-height: 1; /* Улучшает вертикальное выравнивание */
-        }
-
-        .faq-item input[type="checkbox"]:checked + label {
-             background-color: #f8f9fa; /* Подсветка активного заголовка */
-             color: var(--primary-color);
-        }
-        .faq-item input[type="checkbox"]:checked + label::after {
-            transform: rotate(225deg); /* Поворот '+' в '×' */
-            content: '+'; /* Оставляем плюс, но повернутый */
-        }
-
-        .faq-answer {
-            max-height: 0;
-            overflow: hidden;
-            transition: max-height 0.5s ease-in-out, padding 0.5s ease-in-out;
-            background-color: #fdfdfd;
-            padding: 0 25px;
-        }
-         .faq-answer p {
-            margin: 0;
-            padding: 25px 0;
-            color: var(--text-muted);
-            font-size: 0.98rem;
-            line-height: 1.8;
-         }
-          .faq-answer p code { /* Стилизуем код внутри ответа */
-             background-color: var(--code-bg);
-             color: var(--text-color);
-             padding: 2px 5px;
-             border-radius: 3px;
-             font-size: 0.95em;
-         }
-         .faq-answer p strong {
-             color: var(--text-color);
-             font-weight: 600;
-         }
-         .faq-answer p br { /* Добавляем отступ после переноса строки */
-             content: "";
-             display: block;
-             margin-bottom: 0.5em;
-         }
-
-
-        .faq-item input[type="checkbox"]:checked ~ .faq-answer {
-            max-height: 600px; /* Увеличиваем для потенциально длинных ответов */
-            padding: 0 25px;
-            border-top: 1px dashed var(--border-color);
-        }
-
-        /* --- Футер (Footer) --- */
-        #site-footer {
-            background-color: var(--footer-bg);
-            color: var(--footer-text);
-            text-align: center;
-            padding: 2.5rem 0;
-            margin-top: auto;
-             border-top: 5px solid;
-             border-image: var(--gradient-primary) 1;
-        }
-
-        #site-footer a {
-            color: var(--secondary-color);
-            font-weight: 600;
-            text-decoration: underline;
-            text-underline-offset: 4px; /* Отступ подчеркивания */
-             transition: color 0.3s ease, text-shadow 0.3s ease;
-        }
-        #site-footer a:hover {
-            color: #fff; /* Белый при наведении */
-            text-shadow: 0 0 8px var(--secondary-color); /* Свечение */
-        }
-        #site-footer p {
-            margin-bottom: 0.5em;
-             font-size: 0.9rem;
-        }
-
-        /* --- Адаптивность --- */
-        @media (max-width: 992px) {
-            .container { max-width: 960px; }
-             h1 { font-size: 2.5rem; }
-             #main-screen h2 { font-size: 2.5rem; }
-             h2 { font-size: 2rem; }
-        }
-
-        @media (max-width: 768px) {
-            body { font-size: 15px; }
-            h1 { font-size: 1.8rem; }
-            #site-header h1 { font-size: 1.6rem; }
-            #main-screen h2 { font-size: 2.2rem; }
-            h2 { font-size: 1.8rem; }
-            h3 { font-size: 1.4rem; }
-
-            #site-header .container { flex-direction: column; align-items: center; }
-            #site-header nav { margin-top: 1rem; }
-            #site-header nav ul { justify-content: center; }
-
-            #main-screen { padding: 4rem 0; }
-            section { padding: 3rem 0; }
-
-            /* Упрощаем 3D эффект на мобильных, оставляем легкое поднятие */
-            .network-cards { perspective: none; }
-            .network-card:hover {
-                transform: translateY(-5px) scale(1.02);
-                box-shadow: 0 10px 25px var(--shadow-medium);
-                 z-index: auto; /* Убираем z-index */
-            }
-             .network-card::before { display: none; } /* Убираем свечение */
-
-            .prompt-list { grid-template-columns: 1fr; } /* Один столбец */
-
-             .faq-item label { padding: 15px 20px; font-size: 1rem; }
-             .faq-item label::after { font-size: 1.6rem; }
-             .faq-answer { padding: 0 20px; }
-             .faq-answer p { padding: 20px 0; font-size: 0.95rem; }
-              .faq-item input[type="checkbox"]:checked ~ .faq-answer { padding: 0 20px; }
-
-        }
-
-        @media (max-width: 480px) {
-             body { font-size: 14px; }
-             h1 { font-size: 1.6rem; }
-             #site-header h1 { font-size: 1.4rem; }
-             #main-screen h2 { font-size: 1.8rem; }
-             h2 { font-size: 1.5rem; }
-
-             #site-header nav a { padding: 0.5rem 0.8rem; font-size: 0.9rem;}
-             #main-screen p { font-size: 1rem; }
-             pre { font-size: 0.8em; padding: 15px; }
-
-             .network-card { padding: 20px; }
-             .prompt-item { padding: 20px; }
-             .faq-item label { padding: 12px 15px; }
-             .faq-item label::after { font-size: 1.5rem; }
-        }
 
     </style>
-    <!-- Добавляем ссылку на шрифты для иконок или кода (необязательно, но улучшает вид) -->
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Fira+Code:wght@400;500&display=swap" rel="stylesheet">
 </head>
 <body>
 
-    <!-- Шапка -->
-    <header id="site-header">
+    <header>
+        <!-- Header content -->
         <div class="container">
-            <h1>✨ Документация по Нейросетям ✨</h1>
+            <h1>Документация по нейросетям</h1>
             <nav>
                 <ul>
-                    <li><a href="#main-screen">🚀 Старт</a></li>
-                    <li><a href="#popular-networks">🧠 Нейросети</a></li>
-                    <li><a href="#prompt-examples">💡 Промты</a></li>
-                    <li><a href="#faq">❓ FAQ</a></li>
-                    <li><a href="#site-footer">📞 Контакты</a></li>
+                    <li><a href="#home" class="active">Главная</a></li>
+                    <li><a href="#popular-nns">Популярные НС</a></li>
+                    <li><a href="#prompt-examples">Примеры промтов</a></li>
+                    <li><a href="#faq">FAQ</a></li>
                 </ul>
             </nav>
         </div>
     </header>
 
-    <main>
-        <!-- Главный экран -->
-        <section id="main-screen">
-            <div class="container">
-                <h2>Погружение в Мир ИИ</h2>
-                <p>Добро пожаловать в интерактивное руководство по нейросетям! Откройте для себя популярные модели, научитесь создавать эффективные промты и найдите ответы на свои вопросы. Этот ресурс создан для всех, кто хочет освоить мощь искусственного интеллекта.</p>
-                <p><strong>Ваш гид в будущее уже здесь!</strong></p>
-            </div>
-        </section>
-
-        <!-- Популярные нейросети -->
-        <section id="popular-networks">
-            <div class="container">
-                <h2>🧠 Популярные Нейросети</h2>
-                <div class="network-cards">
-                    <!-- Карточка 1: ChatGPT -->
-                    <div class="network-card" style="--accent-glow: rgba(0, 123, 255, 0.4);"> <!-- Синее свечение -->
-                        <h3><span style="color: #007bff;">Chat</span>GPT (OpenAI)</h3>
-                        <p>Мастер диалога и текста. Генерирует контент, отвечает, переводит, пишет код. Идеален для творческих и информационных задач.</p>
-                        <strong>Примеры запросов:</strong>
-                        <ul>
-                            <li>"Напиши сценарий короткого видео о путешествии во времени."</li>
-                            <li>"Объясни теорию относительности Эйнштейна через аналогию с поездом."</li>
-                            <li>"Составь 5 заголовков для статьи о веганском питании."</li>
-                        </ul>
-                    </div>
-                    <!-- Карточка 2: Midjourney -->
-                    <div class="network-card" style="--accent-glow: rgba(108, 92, 231, 0.5);"> <!-- Фиолетовое свечение -->
-                         <h3><span style="color: #6f42c1;">Mid</span>journey</h3>
-                         <p>Художник ИИ. Создает потрясающие, часто сюрреалистичные изображения по вашему текстовому описанию. Требует Discord.</p>
-                         <strong>Примеры запросов (в Discord):</strong>
-                         <ul>
-                             <li>"/imagine prompt: bioluminescent forest at twilight, mystical creatures, volumetric lighting, fantasy art --ar 16:9"</li>
-                             <li>"/imagine prompt: astronaut riding a bicycle on the moon, pop art style, vibrant colors"</li>
-                             <li>"/imagine prompt: minimalist logo design, geometric shapes, tech startup, clean --style raw"</li>
-                         </ul>
-                    </div>
-                     <!-- Карточка 3: Stable Diffusion -->
-                    <div class="network-card" style="--accent-glow: rgba(255, 193, 7, 0.4);"> <!-- Желтое свечение -->
-                         <h3><span style="color: #fd7e14;">Stable</span> Diffusion</h3>
-                         <p>Гибкий генератор изображений с открытым кодом. Множество моделей и настроек для точного контроля результата.</p>
-                         <strong>Примеры запросов (могут отличаться в интерфейсах):</strong>
-                         <ul>
-                             <li>"cinematic photo, a lone cyberpunk samurai walking down a neon-lit rainy street, reflection in puddles, hyperrealistic, 8k"</li>
-                             <li>"a cute fluffy cat wearing sunglasses, sitting on a beach chair, cartoon style, vibrant colors"</li>
-                              <li>"detailed illustration of a mechanical heart, steampunk style, intricate gears and pipes"</li>
-                         </ul>
-                     </div>
-                     <!-- Карточка 4: Claude -->
-                    <div class="network-card" style="--accent-glow: rgba(217, 71, 48, 0.4);"> <!-- Теплое красное/оранжевое свечение -->
-                         <h3><span style="color: #d94730;">Claude</span> (Anthropic)</h3>
-                         <p>Сильная языковая модель с фокусом на безопасность и этику. Отлично справляется с анализом больших текстов и сложными инструкциями.</p>
-                         <strong>Примеры запросов:</strong>
-                         <ul>
-                             <li>"Проанализируй прикрепленный PDF-документ и составь краткое резюме на 3 абзаца."</li>
-                             <li>"Напиши вежливый, но твердый ответ на жалобу клиента [описание жалобы]."</li>
-                             <li>"Какие потенциальные риски связаны с использованием ИИ в медицине?"</li>
-                         </ul>
-                     </div>
+    <!-- Обертка остается, но без 3D стилей -->
+    <div id="content-wrapper">
+        <main>
+             <!-- Контент секций остается без изменений -->
+             <section id="home">
+                <div class="container">
+                    <h2>Погрузитесь в мир ИИ!</h2>
+                    <p>Современный гид по нейронным сетям. Откройте для себя популярные модели, освойте искусство создания промтов и найдите ответы на ваши вопросы. Для новичков и энтузиастов ИИ.</p>
                 </div>
-            </div>
-        </section>
+            </section>
 
-        <!-- Примеры промтов -->
-        <section id="prompt-examples">
-            <div class="container">
-                <h2>💡 Примеры Промтов (Шаблоны)</h2>
-                <p>Используйте эти шаблоны как отправную точку. Замените <span class="code-placeholder">[плейсхолдеры]</span> на ваши конкретные детали для наилучших результатов.</p>
-
-                <div class="prompt-list">
-                    <!-- Промт 1 -->
-                    <div class="prompt-item">
-                        <h4>Генерация идей (контент-план)</h4>
-                        <pre><code class="language-text"><span class="code-keyword">Действуй как</span> <span class="code-placeholder">[эксперт по SMM]</span>. <span class="code-keyword">Создай</span> контент-план на неделю для <span class="code-placeholder">[соцсеть, напр. Instagram]</span> аккаунта <span class="code-placeholder">[тип аккаунта, напр. кофейни]</span>. <span class="code-keyword">Цель:</span> <span class="code-placeholder">[цель, напр. повысить вовлеченность]</span>. <span class="code-keyword">Включи</span> <span class="code-placeholder">[количество]</span> постов с разными форматами (<span class="code-placeholder">сторис, рилс, пост</span>). <span class="code-comment">#маркетинг #генерация_идей</span></code></pre>
-                    </div>
-                    <!-- Промт 2 -->
-                    <div class="prompt-item">
-                        <h4>Написание кода (Python)</h4>
-                         <pre><code class="language-python"><span class="code-keyword">Напиши</span> <span class="code-placeholder">Python</span> <span class="code-function">функцию</span> <span class="code-placeholder">`parse_log_file(file_path: str) -> list[dict]`</span>, которая:
-<span class="code-number">1.</span> Принимает путь к лог-файлу (<span class="code-placeholder">file_path</span>).
-<span class="code-number">2.</span> Читает файл построчно.
-<span class="code-number">3.</span> Парсит строки формата <span class="code-string">"[YYYY-MM-DD HH:MM:SS] LEVEL: Message"</span>.
-<span class="code-number">4.</span> Возвращает список словарей, где каждый словарь содержит <span class="code-string">'timestamp'</span>, <span class="code-string">'level'</span>, <span class="code-string">'message'</span>.
-<span class="code-keyword">Добавь</span> обработку ошибок чтения файла и неверного формата строк.
-<span class="code-comment">#python #программирование #парсер</span></code></pre>
-                    </div>
-                     <!-- Промт 3 -->
-                    <div class="prompt-item">
-                        <h4>Генерация изображения (Фотореализм)</h4>
-                         <pre><code><span class="code-placeholder">photorealistic portrait</span> of an <span class="code-placeholder">elderly artist</span> in <span class="code-placeholder">her messy, sunlit studio</span>, <span class="code-placeholder">intricate details</span>, <span class="code-placeholder">wrinkles</span>, <span class="code-placeholder">soft natural lighting</span>, <span class="code-placeholder">shallow depth of field</span>, <span class="code-placeholder">captured with Canon EOS R5</span>, <span class="code-placeholder">85mm f/1.2 lens</span>, <span class="code-placeholder">hyperdetailed</span>, <span class="code-placeholder">cinematic</span> <span class="code-comment">#midjourney #stablediffusion #фотореализм</span></code></pre>
-                    </div>
-                    <!-- Промт 4 -->
-                    <div class="prompt-item">
-                        <h4>Рерайтинг / Улучшение текста</h4>
-                        <pre><code class="language-text"><span class="code-keyword">Перепиши</span> следующий текст, сделав его <span class="code-placeholder">[более убедительным / кратким / формальным / креативным]</span> и исправив грамматические ошибки. Сохрани основной смысл. <br><br><span class="code-keyword">Оригинальный текст:</span><br>"<span class="code-placeholder">[Вставьте сюда ваш исходный текст...]</span>" <br><br><span class="code-keyword">Целевая аудитория:</span> <span class="code-placeholder">[описание аудитории, если нужно]</span> <span class="code-comment">#копирайтинг #рерайтинг</span></code></pre>
-                    </div>
-                </div>
-            </div>
-        </section>
-
-        <!-- FAQ -->
-        <section id="faq">
-            <div class="container">
-                <h2>❓ Часто Задаваемые Вопросы (FAQ)</h2>
-                <div class="faq-accordion">
-                    <!-- Вопрос 1 -->
-                    <div class="faq-item">
-                        <input type="checkbox" id="faq1">
-                        <label for="faq1">Как нейросети "учатся"?</label>
-                        <div class="faq-answer">
-                            <p>Обучение нейросетей (особенно больших моделей) — это процесс подстройки миллиардов внутренних параметров (весов) на огромных наборах данных. Например, языковые модели "читают" триллионы слов из интернета, книг и других источников.<br>
-                            Они учатся предсказывать следующее слово в предложении, понимать грамматические структуры, факты и даже стили письма. Модели для изображений учатся ассоциировать текстовые описания с визуальными элементами на миллионах пар "картинка-текст".<br>
-                            Этот процесс требует колоссальных вычислительных мощностей и времени.</p>
-                        </div>
-                    </div>
-                    <!-- Вопрос 2 -->
-                    <div class="faq-item">
-                        <input type="checkbox" id="faq2">Что такое "галлюцинации" ИИ?</label>
-                        <div class="faq-answer">
-                            <p>"Галлюцинации" — это термин, используемый для описания ситуаций, когда нейросеть генерирует информацию, которая звучит правдоподобно, но является ложной, неточной или полностью вымышленной.<br>
-                            Это происходит потому, что модели оптимизированы для генерации связного и грамматически правильного текста (или изображений), а не для проверки фактов. Они могут "придумать" детали, чтобы заполнить пробелы или удовлетворить запрос.<br>
-                            <strong>Важно:</strong> Всегда проверяйте критически важную информацию, полученную от ИИ, в надежных источниках.</p>
-                        </div>
-                    </div>
-                    <!-- Вопрос 3 -->
-                    <div class="faq-item">
-                        <input type="checkbox" id="faq3">Можно ли использовать сгенерированный контент коммерчески?</label>
-                        <div class="faq-answer">
-                            <p>Политика использования контента, сгенерированного ИИ, сильно различается в зависимости от конкретной модели и платформы.
+            <section id="popular-nns">
+                <div class="container">
+                    <h2>Популярные нейросети</h2>
+                    <div class="card-container">
+                        <div class="card">
+                            <h3>ChatGPT & Claude</h3>
+                            <p>Передовые языковые модели для генерации текста, диалогов, кода, анализа данных и творческих задач.</p>
+                            <strong>Примеры запросов:</strong>
                             <ul>
-                                <li><strong>OpenAI (ChatGPT, DALL-E):</strong> Как правило, разрешают коммерческое использование контента, созданного через их платные API или подписки, но с определенными оговорками (ответственность за контент лежит на пользователе).</li>
-                                <li><strong>Midjourney:</strong> Условия зависят от вашего тарифного плана. Бесплатные или дешевые планы могут запрещать коммерческое использование, тогда как дорогие предоставляют такие права.</li>
-                                <li><strong>Stable Diffusion (модели с открытым кодом):</strong> Лицензии могут сильно варьироваться. Некоторые разрешают свободное использование, другие могут иметь ограничения.</li>
+                                <li>"Составь план статьи о влиянии ИИ на креативные индустрии."</li>
+                                <li>"Объясни теорию относительности Эйнштейна с помощью аналогии с поездом."</li>
+                                <li>"Напиши Python скрипт для парсинга данных с веб-сайта [URL]."</li>
                             </ul>
-                            <strong>Рекомендация:</strong> Всегда внимательно читайте лицензионное соглашение (Terms of Service / License) конкретного инструмента перед коммерческим использованием сгенерированного контента.</p>
                         </div>
-                    </div>
-                    <!-- Вопрос 4 -->
-                    <div class="faq-item">
-                        <input type="checkbox" id="faq4">Как написать хороший промт?</label>
-                        <div class="faq-answer">
-                             <p>Создание эффективного промта — это искусство и наука. Вот несколько советов:
-                            <br><strong>1. Будьте конкретны:</strong> Чем точнее вы опишете задачу, тем лучше будет результат. Вместо "напиши о кошках" попробуйте "напиши статью на 500 слов о пользе содержания кошек для пожилых людей".
-                            <br><strong>2. Укажите роль:</strong> Попросите ИИ действовать как определенный эксперт ("Действуй как опытный маркетолог...").
-                            <br><strong>3. Задайте формат:</strong> Укажите желаемый формат вывода (список, таблица, JSON, абзацы, код).
-                            <br><strong>4. Определите тон и стиль:</strong> (официальный, дружелюбный, юмористический, технический).
-                            <br><strong>5. Предоставьте контекст/примеры:</strong> Если возможно, дайте пример того, что вы хотите получить.
-                            <br><strong>6. Итерируйте:</strong> Не бойтесь пробовать разные формулировки, добавлять или убирать детали, если первый результат вас не устроил.</p>
+                        <div class="card">
+                            <h3>Midjourney & Stable Diffusion XL</h3>
+                            <p>Мощные инструменты для создания уникальных изображений, артов и фотореалистичных сцен по текстовым описаниям.</p>
+                            <strong>Примеры запросов:</strong>
+                            <ul>
+                                <li>"Фотореалистичный портрет кибер-самурая в неоновом Токио, дождь, отражения на мокром асфальте, 8K, cinematic."</li>
+                                <li>"Иллюстрация в стиле акварели: лиса читает книгу в уютном лесном домике."</li>
+                                <li>"Логотип для технологического стартапа 'Quantum Leap', минимализм, градиент."</li>
+                            </ul>
+                        </div>
+                        <div class="card">
+                            <h3>GitHub Copilot & Codeium</h3>
+                            <p>Ваши ИИ-ассистенты в разработке. Помогают писать код, находить ошибки, генерировать тесты и документацию.</p>
+                            <strong>Примеры использования:</strong>
+                            <ul>
+                                <li>Автодополнение кода в реальном времени на основе контекста.</li>
+                                <li>Генерация функций по комментарию (например, "// function to calculate fibonacci sequence").</li>
+                                <li>Рефакторинг и оптимизация существующего кода.</li>
+                            </ul>
                         </div>
                     </div>
                 </div>
+            </section>
+
+            <section id="prompt-examples">
+                <div class="container">
+                    <h2>Мастерская промтов</h2>
+                    <p style="text-align: center; margin-bottom: 30px; max-width: 700px; margin-left: auto; margin-right: auto; color: #555;">Готовые шаблоны для разных задач. Адаптируйте их под себя и экспериментируйте! Нажмите "Копировать" для быстрого старта.</p>
+                    <div style="overflow-x: auto;">
+                        <table class="prompt-table">
+                            <thead>
+                                <tr><th>Задача</th><th>Шаблон Промта</th><th>Действие</th></tr>
+                            </thead>
+                            <tbody>
+                                <tr><td>Мозговой штурм идей</td><td class="prompt-code"><pre><code class="prompt-text"><span class="code-keyword">Выступи в роли</span> <span class="code-placeholder">[Эксперт, напр.: Маркетолога]</span>. <span class="code-keyword">Сгенерируй</span> 10 <span class="code-string">нестандартных идей</span> для <span class="code-placeholder">[Цель, напр.: продвижения эко-продуктов]</span>. <span class="code-keyword">Учитывай тренды</span> <span class="code-placeholder">[Год, напр.: 2024]</span>.</code></pre></td><td><button class="copy-button">Копировать</button></td></tr>
+                                <tr><td>Создание контента (Статья)</td><td class="prompt-code"><pre><code class="prompt-text"><span class="code-keyword">Напиши</span> <span class="code-string">увлекательную статью</span> (около 500 слов) на тему "<span class="code-placeholder">[Ваша тема]</span>". <span class="code-keyword">Структура</span>: Введение, <span class="code-placeholder">[Пункт 1]</span>, <span class="code-placeholder">[Пункт 2]</span>, Заключение. <span class="code-keyword">Тон</span>: <span class="code-placeholder">[Напр.: Информативный, но легкий]</span>. <span class="code-keyword">Целевая аудитория</span>: <span class="code-placeholder">[Напр.: Начинающие программисты]</span>.</code></pre></td><td><button class="copy-button">Копировать</button></td></tr>
+                                <tr><td>Саммаризация текста</td><td class="prompt-code"><pre><code class="prompt-text"><span class="code-keyword">Сделай краткое саммари</span> (3-4 предложения) следующего текста, <span class="code-string">выделив ключевые моменты</span>: "<span class="code-placeholder">[Вставьте ваш длинный текст сюда...]</span>"</code></pre></td><td><button class="copy-button">Копировать</button></td></tr>
+                                <tr><td>Генерация изображения (Фото)</td><td class="prompt-code"><pre><code class="prompt-text"><span class="code-string">photorealistic image of:</span> A <span class="code-placeholder">[Subject, e.g., golden retriever puppy]</span> <span class="code-placeholder">[Action, e.g., playing in a field of wildflowers]</span> during <span class="code-placeholder">[Time of day/lighting, e.g., golden hour]</span>. <span class="code-keyword">Camera:</span> <span class="code-placeholder">[e.g., DSLR, 50mm lens, f/1.8]</span>. <span class="code-keyword">Details:</span> <span class="code-placeholder">[e.g., soft focus background, high detail]</span>. <span class="code-comment">--ar 3:2 --style raw --v 6.0</span></code></pre></td><td><button class="copy-button">Копировать</button></td></tr>
+                                <tr><td>Перевод и Адаптация</td><td class="prompt-code"><pre><code class="prompt-text"><span class="code-keyword">Переведи</span> следующий текст на <span class="code-placeholder">[Целевой язык, напр.: Английский]</span>. <span class="code-keyword">Адаптируй</span> стиль и идиомы для <span class="code-placeholder">[Целевая аудитория/культура, напр.: американской аудитории]</span>, сохраняя <span class="code-string">основной смысл и тон</span>: "<span class="code-placeholder">[Исходный текст]</span>"</code></pre></td><td><button class="copy-button">Копировать</button></td></tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </section>
+
+            <section id="faq">
+                <div class="container">
+                    <h2>Часто задаваемые вопросы (FAQ)</h2>
+                    <div class="faq-container">
+                        <div class="faq-item">
+                            <button class="accordion-toggle">Как выбрать подходящую нейросеть?</button>
+                            <div class="accordion-content"><p>Выбор зависит от вашей задачи:</p><ul><li><strong>Текст (статьи, код, ответы):</strong> ChatGPT, Claude, Gemini.</li><li><strong>Изображения:</strong> Midjourney (арт, стиль), Stable Diffusion (гибкость, фотореализм), DALL-E 3 (интеграция с ChatGPT).</li><li><strong>Программирование:</strong> GitHub Copilot, Codeium, Tabnine.</li><li><strong>Голос:</strong> ElevenLabs, Play.ht.</li><li><strong>Видео:</strong> Runway Gen-2, Pika Labs, Sora (скоро).</li></ul><p>Учитывайте также доступность (бесплатные/платные версии), интерфейс и специфические возможности модели.</p></div>
+                        </div>
+                        <div class="faq-item">
+                            <button class="accordion-toggle">Что такое "температура" и "токены" в настройках?</button>
+                            <div class="accordion-content"><p><strong>Температура (Temperature):</strong> Параметр, контролирующий случайность (креативность) ответа. Низкая температура (ближе к 0) делает ответы более предсказуемыми и сфокусированными. Высокая температура (ближе к 1 или выше) увеличивает разнообразие и неожиданность, но может привести к менее связному тексту.</p><p><strong>Токены (Tokens):</strong> Единицы, на которые модель делит текст (слова, части слов, знаки препинания). Большинство моделей имеют ограничение на количество токенов в промте и ответе (контекстное окно). Например, 4096, 8192, 128k токенов.</p></div>
+                        </div>
+                        <div class="faq-item">
+                            <button class="accordion-toggle">Как улучшить качество генерации?</button>
+                            <div class="accordion-content"><p>Несколько советов:</p><ul><li><strong>Четкость промта:</strong> Будьте максимально конкретны в своем запросе. Укажите роль, формат, стиль, аудиторию, ограничения.</li><li><strong>Контекст:</strong> Предоставьте модели достаточно информации и примеров (few-shot prompting).</li><li><strong>Итерации:</strong> Не ожидайте идеального результата с первого раза. Уточняйте промт, пробуйте разные формулировки.</li><li><strong>Структурирование:</strong> Используйте маркеры, заголовки, списки в промте для лучшего понимания задачи моделью.</li><li><strong>Параметры:</strong> Экспериментируйте с настройками (температура, top-p и т.д.), если они доступны.</li></ul></div>
+                        </div>
+                        <div class="faq-item">
+                            <button class="accordion-toggle">Этично ли использовать ИИ-контент?</button>
+                            <div class="accordion-content"><p>Этика использования ИИ-контента — сложный вопрос. Важно:</p><ul><li><strong>Прозрачность:</strong> По возможности указывайте, что контент был создан или дополнен с помощью ИИ, особенно в академических или журналистских работах.</li><li><strong>Ответственность:</strong> Вы несете ответственность за точность и последствия использования сгенерированного контента. Всегда проверяйте факты.</li><li><strong>Авторское право:</strong> Правовой статус ИИ-контента все еще формируется. Избегайте прямого копирования стилей конкретных художников без разрешения и будьте осторожны с коммерческим использованием.</li><li><strong>Не заменять человеческий труд полностью:</strong> Используйте ИИ как инструмент для помощи и ускорения, а не для полной замены творческого или аналитического процесса там, где важен человеческий фактор.</li></ul></div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+        </main>
+
+        <footer>
+             <!-- Footer content -->
+            <div class="container">
+                <p>© 2024 Современный Гайд по Нейросетям. Создано с вдохновением от ИИ.</p>
+                <p>Посмотрите исходный код на <a href="https://github.com/" target="_blank" rel="noopener noreferrer">GitHub</a></p>
             </div>
-        </section>
-    </main>
+        </footer>
+    </div> <!-- Конец #content-wrapper -->
 
-    <!-- Футер -->
-    <footer id="site-footer">
-        <div class="container">
-            <p>© 2024 Продвинутая Документация по Нейросетям. Сделано с ❤️ и CSS.</p>
-            <p>Нашли ошибку или есть предложение? Свяжитесь со мной на <a href="https://github.com/" target="_blank" rel="noopener noreferrer">GitHub</a>!</p>
-            <!-- Замените # на реальную ссылку -->
-        </div>
-    </footer>
-
-    <!-- Небольшой скрипт для эффекта свечения карточки (необязательно, т.к. требует JS) -->
-    <!--
     <script>
-    // Этот скрипт нужен для эффекта свечения, следующего за курсором.
-    // Так как требование - без JS, он закомментирован.
-    // Оставляем его как идею для будущей доработки.
-    // document.querySelectorAll('.network-card').forEach(card => {
-    //     card.onmousemove = e => {
-    //         const rect = card.getBoundingClientRect();
-    //         const x = e.clientX - rect.left;
-    //         const y = e.clientY - rect.top;
-    //         card.style.setProperty('--x', `${x}px`);
-    //         card.style.setProperty('--y', `${y}px`);
-    //     }
-    // });
+        document.addEventListener('DOMContentLoaded', () => {
+
+            // --- Навигация (выделение активного пункта) ---
+            // Код навигации остается без изменений
+            const navLinks = document.querySelectorAll('header nav a');
+            const sections = document.querySelectorAll('main section');
+            function changeActiveLink() {
+                 let index = sections.length;
+                 const offsetThreshold = window.innerHeight * 0.4;
+                 while(--index && window.scrollY + offsetThreshold < sections[index].offsetTop) {}
+                 navLinks.forEach((link) => link.classList.remove('active'));
+                 const currentSectionId = sections[index] ? sections[index].id : null;
+                 const activeLink = document.querySelector(`header nav a[href="#${currentSectionId}"]`);
+                 if (activeLink) {
+                     activeLink.classList.add('active');
+                 } else if (window.scrollY < window.innerHeight * 0.5) {
+                     navLinks[0]?.classList.add('active');
+                 }
+            }
+            changeActiveLink();
+            window.addEventListener('scroll', changeActiveLink);
+
+            // --- FAQ Accordion ---
+             // Код аккордеона остается без изменений
+            const accordionToggles = document.querySelectorAll('.accordion-toggle');
+            accordionToggles.forEach(toggle => {
+                toggle.addEventListener('click', () => {
+                    const content = toggle.nextElementSibling;
+                    const item = toggle.parentElement;
+                    const isActive = toggle.classList.contains('active');
+                     document.querySelectorAll('.faq-item').forEach(otherItem => {
+                         if (otherItem !== item && otherItem.querySelector('.accordion-toggle.active')) {
+                             const otherToggle = otherItem.querySelector('.accordion-toggle');
+                             const otherContent = otherItem.querySelector('.accordion-content');
+                             otherToggle.classList.remove('active');
+                             otherContent.classList.remove('active');
+                             otherContent.style.maxHeight = null;
+                         }
+                     });
+                    toggle.classList.toggle('active');
+                    content.classList.toggle('active');
+                    if (content.classList.contains('active')) {
+                        content.style.maxHeight = content.scrollHeight + 40 + "px";
+                    } else {
+                        content.style.maxHeight = null;
+                    }
+                });
+            });
+
+            // --- Copy Button ---
+            // Код кнопки копирования остается без изменений
+            const copyButtons = document.querySelectorAll('.copy-button');
+            copyButtons.forEach(button => {
+                button.addEventListener('click', () => {
+                    const promptCodeElement = button.closest('.prompt-code').querySelector('code.prompt-text');
+                    if (promptCodeElement) {
+                        const textToCopy = promptCodeElement.innerText || promptCodeElement.textContent;
+                        navigator.clipboard.writeText(textToCopy)
+                            .then(() => {
+                                const originalText = button.textContent;
+                                button.textContent = 'Скопировано!';
+                                button.classList.add('copied');
+                                setTimeout(() => {
+                                    button.textContent = originalText;
+                                    button.classList.remove('copied');
+                                }, 1800);
+                            })
+                            .catch(err => {
+                                console.error('Ошибка копирования: ', err);
+                                alert('Не удалось скопировать текст.');
+                            });
+                    } else { console.error('Не найден элемент с текстом для копирования'); }
+                });
+            });
+
+           // --- Edge Bending Effect ---
+           const bendableSections = document.querySelectorAll('main section'); // Целевые элементы - секции
+           const bendZone = parseFloat(getComputedStyle(document.documentElement).getPropertyValue('--edge-bend-zone')) || 150;
+           const minScale = parseFloat(getComputedStyle(document.documentElement).getPropertyValue('--edge-bend-scale')) || 0.92;
+           const minOpacity = parseFloat(getComputedStyle(document.documentElement).getPropertyValue('--edge-bend-opacity')) || 0.7;
+
+           function applyEdgeBendingEffect() {
+               const viewportHeight = window.innerHeight;
+
+               bendableSections.forEach(section => {
+                   const rect = section.getBoundingClientRect();
+                   const sectionTop = rect.top;
+                   const sectionBottom = rect.bottom;
+                   const sectionHeight = rect.height;
+
+                   let scaleY = 1.0;
+                   let opacity = 1.0;
+
+                   // Рассчитываем "давление" от верхнего и нижнего краев
+                   let topPressure = 0; // 0 = нет давления, 1 = максимальное давление
+                   let bottomPressure = 0;
+
+                   if (sectionTop < bendZone) {
+                       // Чем ближе верхний край секции к верхнему краю окна, тем больше давление
+                       // progress = 1 у границы зоны, 0 у края окна
+                       const progress = Math.max(0, sectionTop / bendZone);
+                       topPressure = 1 - progress; // Давление = 1 - progress
+                   }
+
+                   if (sectionBottom > viewportHeight - bendZone) {
+                        // Чем ближе нижний край секции к нижнему краю окна, тем больше давление
+                        // progress = 1 у границы зоны, 0 у края окна
+                        const progress = Math.max(0, (viewportHeight - sectionBottom) / bendZone);
+                        bottomPressure = 1 - progress; // Давление = 1 - progress
+                   }
+
+                   // Используем максимальное давление (если секция зажата между зонами, она сожмется сильнее)
+                   // Можно использовать и сумму давлений, но максимум обычно выглядит лучше
+                   const totalPressure = Math.max(topPressure, bottomPressure);
+
+                   // Рассчитываем итоговый масштаб и прозрачность на основе давления
+                   // Линейная интерполяция: value = min_value + (1 - min_value) * (1 - pressure)
+                   // Или проще: value = 1 - (1 - min_value) * pressure
+                   scaleY = 1 - (1 - minScale) * totalPressure;
+                   opacity = 1 - (1 - minOpacity) * totalPressure;
+
+                   // Применяем стили
+                   section.style.transform = `scaleY(${scaleY.toFixed(3)})`;
+                   section.style.opacity = opacity.toFixed(2);
+               });
+           }
+
+            // Оптимизация с requestAnimationFrame
+            let ticking = false;
+            function handleScroll() {
+                if (!ticking) {
+                    window.requestAnimationFrame(() => {
+                        applyEdgeBendingEffect();
+                        ticking = false;
+                    });
+                    ticking = true;
+                }
+            }
+
+            window.addEventListener('scroll', handleScroll, { passive: true });
+            window.addEventListener('resize', applyEdgeBendingEffect); // Обновляем при ресайзе
+            applyEdgeBendingEffect(); // Первоначальный вызов для установки начального состояния
+
+        });
     </script>
-    -->
 
 </body>
 </html>
